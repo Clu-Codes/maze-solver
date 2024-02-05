@@ -95,3 +95,53 @@ class Cell:
         if self.has_top_wall:
             top_line = Line(top_left, top_right)
             self._win.draw_line(top_line, fill_color="white")
+
+    def draw_move(self, to_cell, undo=False):
+        line_color = None
+        if undo == False:
+            line_color = "red"
+        else:
+            line_color = "grey"
+
+        center = Point(
+            self._x1 + (self._x2 - self._x1) / 2, (self._y1 + (self._y2 - self._y1) / 2)
+        )
+        to_cell_center = Point(
+            to_cell._x1 + (to_cell._x2 - to_cell._x1) / 2,
+            to_cell._y1 + (to_cell._y2 - to_cell._y1) / 2,
+        )
+        line = Line(center, to_cell_center)
+
+        self._win.draw_line(line, line_color)
+
+
+class Maze:
+    def __init__(self, x1, y1, num_rows, num_cols, cell_size_x, cell_size_y, win):
+        self._x1 = x1
+        self._y1 = y1
+        self._num_rows = num_rows
+        self._num_cols = num_cols
+        self._cell_size_x = cell_size_x
+        self._cell_size_y = cell_size_y
+        self._win = win
+
+    def _create_cells(self):
+        self._cells = []
+        cell_val = Cell(
+            self._x1,
+            self._y1,
+            self._x1 * self._cell_size_x,
+            self._y1 * self._cell_size_y,
+            self._win,
+        )
+        for column in range(self._num_cols):
+            self._cells.append([cell_val])
+            for row in range(self._num_rows):
+                self._cells[column].append(cell_val)
+
+        for list in self._cells:
+            for cell in list:
+                cell._draw_cell(list, cell)
+
+    def _draw_cell(self, i, j):
+        self.draw()

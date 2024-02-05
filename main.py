@@ -58,6 +58,7 @@ def main():
     cell4.draw()
 
     # win.draw_line(line, fill_color="blue")
+    cell2.draw_move(cell4, undo=False)
     win.wait_for_close()
 
 
