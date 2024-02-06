@@ -1,4 +1,5 @@
 from cell import Cell
+from graphics import Line, Point
 import random
 import time
 
@@ -12,7 +13,7 @@ class Maze:
         num_cols,
         cell_size_x,
         cell_size_y,
-        win,
+        win=None,
     ):
         self._cells = []
         self._x1 = x1
@@ -50,3 +51,23 @@ class Maze:
             return
         self._win.redraw()
         time.sleep(0.025)
+
+    def _break_entrance_exit(self, entrance_cell, exit_cell):
+        if self._win is None:
+            return
+
+        if self._cells[entrance_cell].has_top_wall:
+            repaint_entry = Line(
+                Point(self._cells[entrance_cell]._x1, self._cells[entrance_cell]._y1),
+                (self._cells[entrance_cell]._x2, self._cells[entrance_cell]._y1),
+            )
+            self._cells[entrance_cell].self._win.draw_line(repaint_entry)
+            self._cells[entrance_cell].has_top_wall = False
+
+        if self._cells[entrance_cell].has_right_wall:
+            repaint_exit = Line(
+                Point(self._cells[entrance_cell]._x2, self._cells[entrance_cell]._y1),
+                (self._cells[entrance_cell]._x2, self._cells[entrance_cell]._y2),
+            )
+            self._cells[entrance_cell].self_win.draw_line(repaint_exit)
+            self._cells[exit_cell].has_right_wall = False
