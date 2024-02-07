@@ -25,6 +25,7 @@ class Maze:
         self._win = win
 
         self._create_cells()
+        self._break_entrance_exit(self._cells[0][0], self._cells[-1][-1])
 
     def _create_cells(self):
         for i in range(self._num_cols):
@@ -56,18 +57,15 @@ class Maze:
         if self._win is None:
             return
 
-        if self._cells[entrance_cell].has_top_wall:
-            repaint_entry = Line(
-                Point(self._cells[entrance_cell]._x1, self._cells[entrance_cell]._y1),
-                (self._cells[entrance_cell]._x2, self._cells[entrance_cell]._y1),
+        if entrance_cell.has_top_wall:
+            entrance_cell.has_top_wall = False
+            entrance_cell.draw(
+                entrance_cell._x1,
+                entrance_cell._y1,
+                entrance_cell._x2,
+                entrance_cell._y2,
             )
-            self._cells[entrance_cell].self._win.draw_line(repaint_entry)
-            self._cells[entrance_cell].has_top_wall = False
 
-        if self._cells[entrance_cell].has_right_wall:
-            repaint_exit = Line(
-                Point(self._cells[entrance_cell]._x2, self._cells[entrance_cell]._y1),
-                (self._cells[entrance_cell]._x2, self._cells[entrance_cell]._y2),
-            )
-            self._cells[entrance_cell].self_win.draw_line(repaint_exit)
-            self._cells[exit_cell].has_right_wall = False
+        if exit_cell.has_right_wall:
+            exit_cell.has_right_wall = False
+            exit_cell.draw(exit_cell._x1, exit_cell._y1, exit_cell._x2, exit_cell._y2)
