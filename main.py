@@ -16,6 +16,7 @@ def main():
         margin, margin, num_rows, num_cols, cell_size_x, cell_size_y, win, seed=0
     )
 
+    maze.solve()
     win.wait_for_close()
 
 
