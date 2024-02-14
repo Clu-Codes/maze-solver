@@ -115,44 +115,29 @@ class Maze:
         if i == self._num_cols - 1 and j == self._num_rows - 1:
             return True
 
-        if (
-            i - 1 >= 0
-            and not self._cells[i - 1][j]._visited
-            and not self._cells[i - 1][j].has_right_wall
-        ):
-            self._cells[i][j].draw_move(self._cells[i - 1][j])
-            var = self._solve_r(i - 1, j, i, j)
-            if var:
-                return True
-        if (
-            i + 1 < self._num_cols
-            and not self._cells[i + 1][j]._visited
-            and not self._cells[i + 1][j].has_left_wall
-        ):
-            self._cells[i][j].draw_move(self._cells[i + 1][j])
-            var = self._solve_r(i + 1, j, i, j)
-            if var:
-                return True
-        if (
-            j - 1 >= 0
-            and not self._cells[i][j - 1]._visited
-            and not self._cells[i][j - 1].has_bottom_wall
-        ):
-            self._cells[i][j].draw_move(self._cells[i][j - 1])
-            var = self._solve_r(i, j - 1, i, j)
-            if var:
-                return True
-        if (
-            j + 1 < self._num_rows
-            and not self._cells[i][j + 1]._visited
-            and not self._cells[i][j + 1].has_top_wall
-        ):
-            self._cells[i][j].draw_move(self._cells[i][j + 1])
-            var = self._solve_r(i, j + 1, i, j)
-            if var:
-                return True
+        directions = [
+            (i, j - 1, lambda cell: not cell.has_bottom_wall),
+            (i, j + 1, lambda cell: not cell.has_top_wall),
+            (i + 1, j, lambda cell: not cell.has_left_wall),
+            (i - 1, j, lambda cell: not cell.has_right_wall),
+        ]
 
-        self._cells[i][j].draw_move(self._cells[fi][fj])
+        for di, dj, wall_fn in directions:
+            if (
+                di >= 0
+                and di < self._num_cols
+                and dj >= 0
+                and dj < self._num_rows
+                and wall_fn(self._cells[di][dj])
+                and not self._cells[di][dj]._visited
+            ):
+                self._cells[i][j].draw_move(self._cells[di][dj])
+                var = self._solve_r(di, dj, i, j)
+                if var:
+                    return True
+                else:
+                    self._cells[i][j].draw_move(self._cells[di][dj], True)
+
         return False
 
     def solve(self):
